@@ -2,6 +2,7 @@ package main
 
 import (
 	"blog-server/global"
+	"blog-server/internal/model"
 	"blog-server/internal/routers"
 	"blog-server/pkg/setting"
 	"github.com/gin-gonic/gin"
@@ -13,6 +14,9 @@ import (
 func init() {
 	if err := setupSetting(); err != nil {
 		log.Fatalf("init.setupSetting err: %v", err)
+	}
+	if err := setupDBEngine(); err != nil {
+		log.Fatalf("init.setupDBEngine err: %v", err)
 	}
 }
 
@@ -45,5 +49,14 @@ func setupSetting() error {
 	}
 	global.ServerSetting.ReadTimeOut *= time.Second
 	global.ServerSetting.WriteTimeOut *= time.Second
+	return nil
+}
+
+func setupDBEngine() error {
+	var err error
+	global.DBEngine, err = model.NewDBEngine(global.DataBaseSettings)
+	if err != nil {
+		return err
+	}
 	return nil
 }
