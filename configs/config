@@ -1,0 +1,22 @@
+Server:
+  RunMode:debug
+  HttpPort:8080
+  ReadTimeOut:60
+  WriteTimeOut:60
+App:
+  DefaultPageSize:10
+  MaxPageSize:100
+  LogSavePath:storage/logs
+  LogFileName:app
+  LogFileExt:.log
+DateBase:
+  DBType:mysql
+  Username:root
+  Password:GaoQK0109_
+  Host:rm-bp1574319r8j71m273o.mysql.rds.aliyuncs.com
+  DBName:blog-server
+  TablePrefix:blog_
+  Charset:utf8
+  ParseTime:True
+  MaxIdleConns:10
+  MAxOpenConns:10
