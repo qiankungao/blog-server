@@ -4,8 +4,10 @@ import (
 	"blog-server/global"
 	"blog-server/internal/model"
 	"blog-server/internal/routers"
+	"blog-server/pkg/logger"
 	"blog-server/pkg/setting"
 	"github.com/gin-gonic/gin"
+	"github.com/natefinch/lumberjack"
 	"log"
 	"net/http"
 	"time"
@@ -18,9 +20,13 @@ func init() {
 	if err := setupDBEngine(); err != nil {
 		log.Fatalf("init.setupDBEngine err: %v", err)
 	}
+	if err := setupLogger(); err != nil {
+		log.Fatalf("init.setupLogger err: %v", err)
+	}
 }
 
 func main() {
+
 	gin.SetMode(global.ServerSetting.RunMode)
 	router := routers.NewRouter()
 	s := &http.Server{
@@ -30,6 +36,7 @@ func main() {
 		WriteTimeout:   global.ServerSetting.WriteTimeOut,
 		MaxHeaderBytes: 1 << 20,
 	}
+	global.Logger.Infof("%s: go-programing/%s", "gao", "出徐哦了")
 	_ = s.ListenAndServe()
 }
 
@@ -58,5 +65,15 @@ func setupDBEngine() error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func setupLogger() error {
+	global.Logger = logger.NewLogger(&lumberjack.Logger{
+		Filename:  global.AppSettings.LogSavePath + "/" + global.AppSettings.LogFileName + global.AppSettings.LogFileExt,
+		MaxSize:   600,
+		MaxAge:    10,
+		LocalTime: true,
+	}, "", log.LstdFlags).WithCaller(2)
 	return nil
 }
