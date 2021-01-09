@@ -25,6 +25,9 @@ func init() {
 	}
 }
 
+//@Title 博客系统
+//@version 1.0
+//@description Go 变成之旅
 func main() {
 
 	gin.SetMode(global.ServerSetting.RunMode)

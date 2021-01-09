@@ -9,6 +9,9 @@ func NewTag() Tag {
 	return Tag{}
 }
 
+//@Summary 获取标签
+//@Product json
+//@Success 200 {string} string "成功"
 func (t Tag) Get(c *gin.Context) {
 
 }
