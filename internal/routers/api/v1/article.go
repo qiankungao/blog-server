@@ -14,7 +14,7 @@ func NewArticle() Article {
 }
 
 func (t Article) Get(c *gin.Context) {
-	app.NewResponse(c).ToErrorREsponse(errcode.ServerError)
+	app.NewResponse(c).ToErrorResponse(errcode.ServerError)
 	return
 }
 func (t Article) List(c *gin.Context) {

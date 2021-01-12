@@ -1,6 +1,10 @@
 package v1
 
-import "github.com/gin-gonic/gin"
+import (
+	"blog-server/internal/service"
+	"blog-server/pkg/app"
+	"github.com/gin-gonic/gin"
+)
 
 type Tag struct {
 }
@@ -16,6 +20,33 @@ func (t Tag) Get(c *gin.Context) {
 
 }
 func (t Tag) List(c *gin.Context) {
+	param := service.TagListRequest{}
+	response := app.NewResponse(c)
+	//valid, errs := true, "ert" //TODO
+	//if !valid {
+	//	global.Logger.WithCaller()
+	//	response.ToErrorResponse()
+	//	return
+	//}
+
+	svc := service.New(c.Request.Context())
+	pager := app.Pager{Page: app.GetPage(c), PageSize: app.GetPageSize(c)}
+
+	totalRows, err := svc.CountTag(&service.CountTagRequest{
+		Name:  param.Name,
+		State: param.State,
+	})
+
+	if err != nil {
+
+	}
+
+	tags, err := svc.GetTagList(&param, &pager)
+	if err != nil {
+
+	}
+	response.ToResponseList(tags, totalRows)
+	return
 
 }
 func (t Tag) Create(c *gin.Context) {
