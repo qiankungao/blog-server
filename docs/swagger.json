@@ -1,0 +1,10 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Go 变成之旅",
+        "title": "博客系统",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {}
+}

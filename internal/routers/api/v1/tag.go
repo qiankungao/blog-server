@@ -50,9 +50,13 @@ func (t Tag) List(c *gin.Context) {
 
 }
 func (t Tag) Create(c *gin.Context) {
-
+	param := service.CreateTagRequest{
+		Name:     "",
+		CreateBy: "",
+		State:    0,
+	}
 }
-func (t Tag) Upate(c *gin.Context) {
+func (t Tag) Update(c *gin.Context) {
 
 }
 func (t Tag) Delete(c *gin.Context) {
