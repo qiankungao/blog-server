@@ -7,7 +7,7 @@ CREATE TABLE `blog_tag`
     `created_by`  varchar(100)        default '' comment '创建人',
     `modified_on` int(10)             default '0' comment '修改时间',
     `modified_by` varchar(100)        default '' comment '修改人',
-    `delete_on`   int(10)             default '0' comment '删除时间',
+    `deleted_on`   int(10)             default '0' comment '删除时间',
     `is_del`      tinyint(3) unsigned default '0' comment '是否删除 0 未删除 1 删除',
     `state`       tinyint(3) unsigned default '1' comment '状态 0 为禁用 1为启用',
     primary key (id)
@@ -27,7 +27,7 @@ CREATE TABLE `blog_article`
     `created_by`      varchar(100)        default '' comment '创建人',
     `modified_on`     int(10)             default '0' comment '修改时间',
     `modified_by`     varchar(100)        default '' comment '修改人',
-    `delete_on`       int(10)             default '0' comment '删除时间',
+    `deleted_on`       int(10)             default '0' comment '删除时间',
     `is_del`          tinyint(3) unsigned default '0' comment '是否删除 0 未删除 1 删除',
     `state`           tinyint(3) unsigned default '1' comment '状态 0 为禁用 1为启用',
     primary key (id)
@@ -44,7 +44,7 @@ CREATE TABLE `blog_article_tag`
     `created_by`  varchar(100)        default '' comment '创建人',
     `modified_on` int(10)             default '0' comment '修改时间',
     `modified_by` varchar(100)        default '' comment '修改人',
-    `delete_on`   int(10)             default '0' comment '删除时间',
+    `deleted_on`   int(10)             default '0' comment '删除时间',
     `is_del`      tinyint(3) unsigned default '0' comment '是否删除 0 未删除 1 删除',
     `state`       tinyint(3) unsigned default '1' comment '状态 0 为禁用 1为启用',
     primary key (id)

@@ -92,7 +92,7 @@ func deleteCallback(scope *gorm.Scope) {
 				addExtraSpaceIfExist(extraOption))).Exec()
 		} else {
 			scope.Raw(fmt.Sprintf(
-				"DELETE FROM %V%V%V",
+				"DELETE FROM %v%v%v",
 				scope.QuotedTableName(),
 				addExtraSpaceIfExist(scope.CombinedConditionSql()),
 				addExtraSpaceIfExist(extraOption))).Exec()

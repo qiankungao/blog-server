@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"runtime"
@@ -83,6 +84,17 @@ func (l *Logger) WithContext(ctx context.Context) *Logger {
 	ll := l.clone()
 	ll.ctx = ctx
 	return ll
+}
+
+func (l *Logger) WithTrace() *Logger {
+	ginCtx, ok := l.ctx.(*gin.Context)
+	if ok {
+		return l.WithFields(Fields{
+			"trace_id": ginCtx.MustGet("X-Trace-ID"),
+			"span_id":  ginCtx.MustGet("X-Span-ID"),
+		})
+	}
+	return l
 }
 
 //设置当前某一层调用栈的信息（程序计数器、文件信息和行号）
@@ -167,3 +179,17 @@ func (l *Logger) Fatal(v ...interface{}) {
 func (l *Logger) Fatalf(format string, v ...interface{}) {
 	l.WithLevel(LevelFatal).OutPut(fmt.Sprintf(format, v...))
 }
+
+func (l *Logger) Error(v ...interface{}) {
+	l.WithLevel(LevelError).WithTrace().OutPut(fmt.Sprint(v...))
+}
+func (l *Logger) Errorf(format string, v ...interface{}) {
+	l.WithLevel(LevelError).WithTrace().OutPut(fmt.Sprintf(format, v...))
+}
+
+//func (l *Logger) Error(ctx context.Context, v ...interface{}) {
+//	l.WithContext(ctx).WithTrace().OutPut(fmt.Sprint(v...))
+//}
+//func (l *Logger) Errorf(ctx context.Context, format string, v ...interface{}) {
+//	l.WithContext(ctx).WithTrace().OutPut(fmt.Sprintf(format, v...))
+//}

@@ -5,5 +5,5 @@ var (
 	ErrorCreateTagFail  = NewError(2001002, "创建标签失败")
 	ErrorUpdateTalFail  = NewError(2001003, "更新标签失败")
 	ErrorDeleteTagFail  = NewError(2001004, "删除标签失败")
-	ErrorCountTalFail   = NewError(2001004, "统计标签失败")
+	ErrorCountTalFail   = NewError(2001005, "统计标签失败")
 )

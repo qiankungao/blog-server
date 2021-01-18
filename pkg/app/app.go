@@ -23,12 +23,13 @@ func NewResponse(ctx *gin.Context) *Response {
 	}
 }
 
-func (r *Response) ToResponse(data interface{}) {
-	if data == nil {
-		data = gin.H{}
+func (r *Response) ToResponse(err *errcode.Error) {
+	response := gin.H{"code": err.Code(), "msg": err.Msg()}
+	details := err.Details()
+	if len(details) > 0 {
+		response["details"] = details
 	}
-
-	r.Ctx.JSON(http.StatusOK, data)
+	r.Ctx.JSON(err.StatusCode(), response)
 }
 func (r *Response) ToResponseList(list interface{}, totalRows int) {
 	r.Ctx.JSON(http.StatusOK, gin.H{

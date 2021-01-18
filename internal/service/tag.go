@@ -16,9 +16,9 @@ type TagListRequest struct {
 }
 
 type CreateTagRequest struct {
-	Name     string `form:"name" biding:"required,min=2,max=100"`
-	CreateBy string `form:"create_by" binding:"required,min=2,max=100"`
-	State    uint8  `form:"state,default=1" binding:"oneof=0 1"`
+	Name      string `form:"name" json:"name" biding:"required,min=2,max=100"`
+	CreatedBy string `form:"created_by" json:"created_by" binding:"required,min=2,max=100"`
+	State     uint8  `form:"state,default=1" json:"state,default=1" binding:"oneof=0 1" `
 }
 
 type UpdateTagRequest struct {
@@ -39,7 +39,7 @@ func (s *Service) GetTagList(param *TagListRequest, pager *app.Pager) ([]*model.
 	return s.dao.GetTagList(param.Name, param.State, pager.Page, pager.PageSize)
 }
 func (s *Service) CreateTag(param *CreateTagRequest) error {
-	return s.dao.CreateTag(param.Name, param.State, param.CreateBy)
+	return s.dao.CreateTag(param.Name, param.State, param.CreatedBy)
 }
 
 func (s *Service) UpdateTag(param *UpdateTagRequest) error {

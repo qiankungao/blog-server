@@ -1,8 +1,11 @@
 package v1
 
 import (
+	"blog-server/global"
 	"blog-server/internal/service"
 	"blog-server/pkg/app"
+	"blog-server/pkg/convert"
+	"blog-server/pkg/errcode"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,12 +25,12 @@ func (t Tag) Get(c *gin.Context) {
 func (t Tag) List(c *gin.Context) {
 	param := service.TagListRequest{}
 	response := app.NewResponse(c)
-	//valid, errs := true, "ert" //TODO
-	//if !valid {
-	//	global.Logger.WithCaller()
-	//	response.ToErrorResponse()
-	//	return
-	//}
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid:%v", errs)
+		response.ToErrorResponse(errcode.ErrorCreateTagFail)
+		return
+	}
 
 	svc := service.New(c.Request.Context())
 	pager := app.Pager{Page: app.GetPage(c), PageSize: app.GetPageSize(c)}
@@ -38,27 +41,77 @@ func (t Tag) List(c *gin.Context) {
 	})
 
 	if err != nil {
-
+		global.Logger.Errorf("svc.CountTag:%v", errs)
+		response.ToErrorResponse(errcode.ErrorCreateTagFail)
 	}
 
 	tags, err := svc.GetTagList(&param, &pager)
 	if err != nil {
-
+		global.Logger.Errorf("svc.GetTagList:%v", errs)
+		response.ToErrorResponse(errcode.ErrorCreateTagFail)
 	}
 	response.ToResponseList(tags, totalRows)
 	return
 
 }
 func (t Tag) Create(c *gin.Context) {
-	param := service.CreateTagRequest{
-		Name:     "",
-		CreateBy: "",
-		State:    0,
+	param := service.CreateTagRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid:%v", errs)
+		response.ToErrorResponse(errcode.ErrorCreateTagFail)
+		return
 	}
+	svc := service.New(c.Request.Context())
+	err := svc.CreateTag(&param)
+	if err != nil {
+		global.Logger.Errorf("svc.CreateTag:%v", err)
+		response.ToErrorResponse(errcode.ErrorCreateTagFail)
+		return
+	}
+
+	response.ToResponse(errcode.Success)
+	return
+
 }
 func (t Tag) Update(c *gin.Context) {
+	param := service.UpdateTagRequest{ID: convert.StrTo(c.Param("id")).MustUInt32()}
+	response := app.NewResponse(c)
 
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid:%v", errs)
+		response.ToErrorResponse(errcode.ErrorCreateTagFail)
+		return
+	}
+
+	svc := service.New(c.Request.Context())
+	err := svc.UpdateTag(&param)
+	if err != nil {
+		global.Logger.Errorf("svc.UpdateTag:%v", errs)
+		response.ToErrorResponse(errcode.ErrorCreateTagFail)
+		return
+	}
+	response.ToResponse(errcode.Success)
+	return
 }
 func (t Tag) Delete(c *gin.Context) {
+	param := service.DeleteTagRequest{ID: convert.StrTo(c.Param("id")).MustUInt32()}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid:%v", errs)
+		response.ToErrorResponse(errcode.ErrorCreateTagFail)
+		return
+	}
 
+	svc := service.New(c)
+	err := svc.DeleteTag(&param)
+	if err != nil {
+		global.Logger.Debug("svc.DeleteTag: %v", err)
+		response.ToErrorResponse(errcode.ErrorDeleteTagFail)
+		return
+	}
+	response.ToResponse(errcode.Success)
 }
