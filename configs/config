@@ -13,7 +13,7 @@ DataBase:
   DBType: mysql
   UserName: root
   Password: GaoQK0109_
-  Host: 127.0.0.1
+  Host:  rm-bp1574319r8j71m273o.mysql.rds.aliyuncs.com
   DBName: blog-server
   TablePrefix: blog_
   Charset: utf8mb4
