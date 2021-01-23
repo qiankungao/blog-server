@@ -5,6 +5,7 @@ import "strconv"
 //类型转换
 type StrTo string
 
+//如果一个结构体实现了String() 方法,那么fmt.Println() 默认会调用String 方法进行输出;
 func (s StrTo) String() string {
 	return string(s)
 }

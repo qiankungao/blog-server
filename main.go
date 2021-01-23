@@ -24,12 +24,14 @@ func init() {
 		log.Fatalf("init.setupLogger err: %v", err)
 	}
 }
+func main() {
+	Run()
+}
 
 //@Title 博客系统
 //@version 1.0
 //@description Go 变成之旅
-func main() {
-
+func Run() {
 	gin.SetMode(global.ServerSetting.RunMode)
 	router := routers.NewRouter()
 	s := &http.Server{
@@ -39,7 +41,6 @@ func main() {
 		WriteTimeout:   global.ServerSetting.WriteTimeOut,
 		MaxHeaderBytes: 1 << 20,
 	}
-	global.Logger.Infof("%s: go-programing/%s", "gao", "出徐哦了")
 	_ = s.ListenAndServe()
 }
 
