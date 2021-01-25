@@ -87,11 +87,11 @@ func (l *Logger) WithContext(ctx context.Context) *Logger {
 }
 
 func (l *Logger) WithTrace() *Logger {
-	ginCtx, ok := l.ctx.(*gin.Context)
+	_, ok := l.ctx.(*gin.Context)
 	if ok {
 		return l.WithFields(Fields{
-			"trace_id": ginCtx.MustGet("X-Trace-ID"),
-			"span_id":  ginCtx.MustGet("X-Span-ID"),
+			"trace_id": "",
+			"span_id":  "",
 		})
 	}
 	return l
@@ -170,9 +170,10 @@ func (l *Logger) Debugf(format string, v ...interface{}) {
 func (l *Logger) Info(v ...interface{}) {
 	l.WithLevel(LevelInfo).OutPut(fmt.Sprint(v...))
 }
-func (l *Logger) Infof(format string, v ...interface{}) {
-	l.WithLevel(LevelInfo).OutPut(fmt.Sprintf(format, v...))
+func (l *Logger) Infof(ctx context.Context, format string, v ...interface{}) {
+	l.WithContext(ctx).WithTrace().OutPut(fmt.Sprintf(format, v...))
 }
+
 func (l *Logger) Fatal(v ...interface{}) {
 	l.WithLevel(LevelFatal).OutPut(fmt.Sprint(v...))
 }
@@ -183,13 +184,11 @@ func (l *Logger) Fatalf(format string, v ...interface{}) {
 func (l *Logger) Error(v ...interface{}) {
 	l.WithLevel(LevelError).WithTrace().OutPut(fmt.Sprint(v...))
 }
-func (l *Logger) Errorf(format string, v ...interface{}) {
-	l.WithLevel(LevelError).WithTrace().OutPut(fmt.Sprintf(format, v...))
-}
 
 //func (l *Logger) Error(ctx context.Context, v ...interface{}) {
 //	l.WithContext(ctx).WithTrace().OutPut(fmt.Sprint(v...))
 //}
-//func (l *Logger) Errorf(ctx context.Context, format string, v ...interface{}) {
-//	l.WithContext(ctx).WithTrace().OutPut(fmt.Sprintf(format, v...))
-//}
+func (l *Logger) Errorf(ctx context.Context, format string, v ...interface{}) {
+	l.level = LevelError
+	l.WithContext(ctx).WithTrace().OutPut(fmt.Sprintf(format, v...))
+}
