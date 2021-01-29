@@ -6,6 +6,7 @@ import (
 	"blog-server/internal/routers"
 	"blog-server/pkg/logger"
 	"blog-server/pkg/setting"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/natefinch/lumberjack"
 	"log"
@@ -24,8 +25,29 @@ func init() {
 		log.Fatalf("init.setupLogger err: %v", err)
 	}
 }
+
+type funcType func(c int) int
+
+//函数作为返回值和作为返回值的这个函数能够调用之前函数的参数，就是Go语言闭包的精髓
+
 func main() {
-	Run()
+	for _, c := range countBy() {
+		fmt.Println(c())
+	}
+}
+
+//每次调用闭包函数所处的环境都是相互独立的,
+func countBy() []func() int {
+	var arr []func() int
+	for i := 1; i <= 3; i++ {
+		func(n int) {
+			arr = append(arr, func() int {
+				return n
+			})
+		}(i)
+
+	}
+	return arr
 }
 
 //@Title 博客系统

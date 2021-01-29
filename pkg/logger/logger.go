@@ -142,10 +142,10 @@ func (l *Logger) JSONFormat(message string) map[string]interface{} {
 	return data
 }
 
-func (l *Logger) OutPut(message string) {
+func (l *Logger) OutPut(level Level, message string) {
 	body, _ := json.Marshal(l.JSONFormat(message))
 	content := string(body)
-	switch l.level {
+	switch level {
 	case LevelDebug:
 		l.newLogger.Print(content)
 	case LevelInfo:
@@ -160,35 +160,30 @@ func (l *Logger) OutPut(message string) {
 		l.newLogger.Panic(content)
 	}
 }
-func (l *Logger) Debug(v ...interface{}) {
-	l.WithLevel(LevelDebug).OutPut(fmt.Sprint(v...))
+func (l *Logger) Debug(ctx context.Context, v ...interface{}) {
+	l.WithContext(ctx).OutPut(LevelDebug, fmt.Sprint(v...))
 }
-
-func (l *Logger) Debugf(format string, v ...interface{}) {
-	l.WithLevel(LevelDebug).OutPut(fmt.Sprintf(format, v...))
+func (l *Logger) Debugf(ctx context.Context, format string, v ...interface{}) {
+	l.WithContext(ctx).OutPut(LevelDebug, fmt.Sprintf(format, v...))
 }
-func (l *Logger) Info(v ...interface{}) {
-	l.WithLevel(LevelInfo).OutPut(fmt.Sprint(v...))
+func (l *Logger) Info(ctx context.Context, v ...interface{}) {
+	l.WithContext(ctx).OutPut(LevelInfo, fmt.Sprint(v...))
 }
 func (l *Logger) Infof(ctx context.Context, format string, v ...interface{}) {
-	l.WithContext(ctx).WithTrace().OutPut(fmt.Sprintf(format, v...))
+	l.WithContext(ctx).WithTrace().OutPut(LevelInfo, fmt.Sprintf(format, v...))
 }
 
-func (l *Logger) Fatal(v ...interface{}) {
-	l.WithLevel(LevelFatal).OutPut(fmt.Sprint(v...))
+func (l *Logger) Fatal(ctx context.Context, v ...interface{}) {
+	l.WithContext(ctx).OutPut(LevelFatal, fmt.Sprint(v...))
 }
-func (l *Logger) Fatalf(format string, v ...interface{}) {
-	l.WithLevel(LevelFatal).OutPut(fmt.Sprintf(format, v...))
-}
-
-func (l *Logger) Error(v ...interface{}) {
-	l.WithLevel(LevelError).WithTrace().OutPut(fmt.Sprint(v...))
+func (l *Logger) Fatalf(ctx context.Context, format string, v ...interface{}) {
+	l.WithContext(ctx).OutPut(LevelFatal, fmt.Sprintf(format, v...))
 }
 
-//func (l *Logger) Error(ctx context.Context, v ...interface{}) {
-//	l.WithContext(ctx).WithTrace().OutPut(fmt.Sprint(v...))
-//}
+func (l *Logger) Error(ctx context.Context, v ...interface{}) {
+	l.WithContext(ctx).WithTrace().OutPut(LevelError, fmt.Sprint(v...))
+}
+
 func (l *Logger) Errorf(ctx context.Context, format string, v ...interface{}) {
-	l.level = LevelError
-	l.WithContext(ctx).WithTrace().OutPut(fmt.Sprintf(format, v...))
+	l.WithContext(ctx).WithTrace().OutPut(LevelError, fmt.Sprintf(format, v...))
 }
