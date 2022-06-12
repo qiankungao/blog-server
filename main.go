@@ -34,6 +34,7 @@ func main() {
 	for _, c := range countBy() {
 		fmt.Println(c())
 	}
+	fmt.Println("启动成........")
 }
 
 //每次调用闭包函数所处的环境都是相互独立的,
